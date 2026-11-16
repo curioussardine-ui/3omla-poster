@@ -146,6 +146,13 @@ npm run dry-run
 Then open `out/post.png` and `out/caption.txt`. Nothing is posted and the state
 file is not changed.
 
+On Windows you can skip `npx playwright install chromium` and use Microsoft
+Edge, which is already installed:
+
+```bash
+PW_CHANNEL=msedge npm run dry-run
+```
+
 ## Settings
 
 All settings are in `src/config.js`:

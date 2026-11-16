@@ -93,7 +93,9 @@ export async function buildHtml(rates, dirs, { date, time }) {
 
 // Render the post image to a PNG file.
 export async function renderImage(html, outFile) {
-  const browser = await chromium.launch();
+  // PW_CHANNEL=msedge (or chrome) uses an installed browser instead of
+  // Playwright's own Chromium. Handy on Windows.
+  const browser = await chromium.launch(process.env.PW_CHANNEL ? { channel: process.env.PW_CHANNEL } : {});
   try {
     const page = await browser.newPage({ viewport: { width: WIDTH, height: HEIGHT }, deviceScaleFactor: 1 });
     await page.setContent(html, { waitUntil: 'load' });
