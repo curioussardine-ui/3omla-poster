@@ -1,0 +1,71 @@
+name: Post rates to Facebook
+
+on:
+  schedule:
+    # Libya is UTC+2 all year. 07:00 UTC = 09:00 Libya (morning run, always posts).
+    - cron: '0 7 * * *'
+    - cron: '0 11 * * *'   # 13:00 Libya
+    - cron: '0 15 * * *'   # 17:00 Libya
+    - cron: '0 19 * * *'   # 21:00 Libya
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run: make the image and caption, do NOT post'
+        type: boolean
+        default: true
+      force:
+        description: 'Post even if no rate changed'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: post-rates
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Make post
+        id: run
+        run: node src/main.js
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && 'true' || 'false' }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+
+      - name: Upload image and caption
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: post
+          path: out/
+          if-no-files-found: ignore
+
+      - name: Save last posted values
+        if: steps.run.outputs.posted == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/last-posted.json
+          git commit -m "Update last posted rates"
+          git pull --rebase
+          git push

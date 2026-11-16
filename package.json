@@ -1,0 +1,18 @@
+{
+  "name": "3omla-poster",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Posts the latest Libya currency rates from the 3omla app to a Facebook Page.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dry-run": "node src/main.js --dry-run",
+    "post": "node src/main.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "playwright": "1.65.1"
+  }
+}
