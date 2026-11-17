@@ -31,6 +31,7 @@ issue. It goes into GitHub Secrets only.
    - `pages_show_list`
    - `pages_read_engagement`
    - `pages_manage_posts`
+   - `pages_manage_metadata` (Facebook refuses photo posts without it)
 
 ## 2. Get a Page access token (does not expire)
 
@@ -42,7 +43,7 @@ long one in three steps.
 1. Open the **Graph API Explorer**: <https://developers.facebook.com/tools/explorer/>
 2. On the right, under **Meta App**, choose your app (`3omla poster`).
 3. Under **User or Page**, choose **User Token**.
-4. Under **Permissions**, add: `pages_show_list`, `pages_read_engagement`,
+4. Under **Permissions**, add: `pages_show_list`, `pages_read_engagement`, `pages_manage_metadata`,
    `pages_manage_posts`.
 5. Click **Generate Access Token**. A Facebook window opens. Choose your Page
    and allow everything it asks.
