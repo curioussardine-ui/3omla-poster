@@ -76,8 +76,9 @@ rights on the Page. If that happens, repeat section 2 and update the secret.
 
 You already saw it in step 2C (`"id"` next to your Page name). It is only digits.
 
-Another way: open your Page on Facebook → **About** → **Page transparency**.
-The Page ID is listed there.
+Use **this** ID. Do not use the number in your Page's web address
+(`facebook.com/profile.php?id=...`): for new-style Pages that is a different
+number, and posting to it fails with error 283.
 
 ## 4. Put the secrets in GitHub
 
